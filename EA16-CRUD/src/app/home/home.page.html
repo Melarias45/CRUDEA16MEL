@@ -1,38 +1,32 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Melisa A. EA16
-    </ion-title>
+    <ion-title>Melisa A. EA16</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Melisa A. EA16 </ion-title>
+      <ion-title size="large">Melisa A. EA16</ion-title>
     </ion-toolbar>
   </ion-header>
 
-
-  <div id="container" class="text-cemter">
+  <div id="container" class="text-center">
     <h2>Lista de tareas</h2>
 
     <!--Inicio del formulario-->
-    <form>
-      <!--Agregar tarea-->
+    <form (submit)="addTask(); $event.preventDefault();">
       <p>Agrega una nueva tarea</p>
 
-      <!-- Se eliminó el type="text" repetido -->
-      <input #nameInput type="text" placeholder="----------">
+      <input type="text" [(ngModel)]="newTaskName" name="taskName" placeholder="Escribe la tarea..." required />
 
-      <button (click)="addItem(nameInput.value); nameInput.value='';">Agregar</button>
+      <button type="submit">Agregar</button>
     </form>
 
-    <!--inicia la tabla-->
+    <!-- Tabla de tareas -->
     <table border="1" style="margin: 10px; width: 100%; text-align: center;">
       <thead>
         <tr>
-          <!--Titulos-->
           <th>ID</th>
           <th>Nombre</th>
           <th>Acciones</th>
@@ -40,35 +34,17 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let item of items">
+        <tr *ngFor="let item of tasks$ | async">
           <td>{{ item.id }}</td>
-
-          <!-- Mostrar el nombre si no estamos editando -->
-          <td *ngIf="editingItem?.id !== item.id">{{ item.name }}</td>
-
-          <!-- Mostrar el campo de edición si es el item actual -->
-          <ng-container *ngIf="editingItem?.id === item.id && editingItem">
-            <td>
-              <input [(ngModel)]="editingItem.name" type="text" placeholder="Nombre">
-            </td>
-          </ng-container>
-
+          <td>{{ item.name }}</td>
           <td>
-            <!-- Botón editar solo si no es el item editado -->
-            <button *ngIf="editingItem?.id !== item.id" (click)="enableEdit(item)">Editar</button>
-
-            <!-- Botones guardar/cancelar solo si es el item editado -->
-            <button *ngIf="editingItem?.id === item.id" (click)="saveEdit()">Guardar</button>
-            <button *ngIf="editingItem?.id === item.id" (click)="cancelEdit()">Cancelar</button>
-
-            <!-- Botón eliminar siempre visible -->
-            <button (click)="removeItem(item.id)">Eliminar</button>
+            <button [disabled]="!item.id" (click)="deleteTask(item.id!)">
+              Eliminar
+            </button>
           </td>
         </tr>
       </tbody>
     </table>
+
   </div>
-
-
-
 </ion-content>
