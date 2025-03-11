@@ -18,9 +18,11 @@
     <form (submit)="addTask(); $event.preventDefault();">
       <p>Agrega una nueva tarea</p>
 
-      <input type="text" [(ngModel)]="newTaskName" name="taskName" placeholder="Escribe la tarea..." required />
-
-      <button type="submit">Agregar</button>
+      <input type="text" [(ngModel)]="newTaskName" name="taskName" placeholder="Escribe la tarea..." required /><br>
+      <p>
+        <br>
+        <button type="submit">Agregar</button>
+      </p>
     </form>
 
     <!-- Tabla de tareas -->
