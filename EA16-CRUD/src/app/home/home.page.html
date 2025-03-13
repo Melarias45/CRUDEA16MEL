@@ -38,15 +38,27 @@
       <tbody>
         <tr *ngFor="let item of tasks$ | async">
           <td>{{ item.id }}</td>
-          <td>{{ item.name }}</td>
+
+          <!-- Mostrar input si se está editando, si no, mostrar el nombre -->
+          <td *ngIf="editingTaskId === item.id; else viewMode">
+            <input [(ngModel)]="editedTaskName" placeholder="Nuevo nombre" />
+          </td>
+          <ng-template #viewMode>
+            <td>{{ item.name }}</td>
+          </ng-template>
+
           <td>
-            <button [disabled]="!item.id" (click)="deleteTask(item.id!)">
-              Eliminar
-            </button>
+            <!-- Botón Editar / Guardar -->
+            <button style="margin: 5px;" *ngIf="editingTaskId !== item.id" (click)="startEdit(item)">Editar</button>
+            <button style="margin: 5px;" *ngIf="editingTaskId === item.id" (click)="saveEdit(item.id!)">Guardar</button>
+
+            <!-- Botón Eliminar -->
+            <button [disabled]="!item.id" (click)="deleteTask(item.id!)">Eliminar</button>
           </td>
         </tr>
       </tbody>
-    </table>
 
+
+    </table>
   </div>
 </ion-content>

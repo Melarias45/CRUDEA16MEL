@@ -26,6 +26,11 @@ export class HomePage implements OnInit {
 
   tasks$!: Observable<Task[]>;
   newTaskName: string = '';
+
+  //almacenes temporales para las variables que se van a editarr
+  editingTaskId: string | null = null;
+  editedTaskName: string = '';
+
   constructor(private taskService: TaskService) { }
 
   ngOnInit() {
@@ -59,4 +64,31 @@ export class HomePage implements OnInit {
       .then(() => console.log('Tarea eliminada'))
       .catch((err: unknown) => console.error('Error al eliminar tarea:', err));
   }
+
+  //edicion de tareas inicia ;D
+
+  startEdit(task: Task) {
+    this.editingTaskId = task.id!;
+    this.editedTaskName = task.name;
+  }
+
+  //guardar los cambios de la edicion
+
+  saveEdit(taskId: string) {
+    const name = this.editedTaskName.trim();
+
+    if (!name) {
+      alert('El nombre de la tarea es obligatorio');
+      return;
+    }
+
+    this.taskService.updateTask(taskId, { name })
+      .then(() => {
+        console.log('Tarea actualizada');
+        this.editingTaskId = null;    // Terminamos la edición
+        this.editedTaskName = '';     // Limpiamos el campo de edición
+      })
+      .catch((err: unknown) => console.error('Error al actualizar tarea:', err));
+  }
+
 }
